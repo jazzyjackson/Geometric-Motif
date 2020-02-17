@@ -10,4 +10,4 @@
 
 ![](starring.png)
 
-![![full screen](https://jazzyjackson.github.io/Geometric-Motif/roses.html)](roses.png)
+![![](roses.png)](https://jazzyjackson.github.io/Geometric-Motif/roses.html)
