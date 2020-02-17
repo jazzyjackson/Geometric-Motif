@@ -1,13 +1,13 @@
 # Geometric-Motif
 
-![](greenbrown%206%20sided.svg)
+![![trefoil](trefoil.html)](trefoil.png)
 
-![](starcover.svg)
+![](starcover.png)
 
-![](snowflakes.svg)
+![](snowflake.png)
 
-![](stones.svg)
+![](stones.png)
 
-![](starring.svg)
+![](starring.png)
 
-![](rose-tile.svg)
+![![](roses.png)](https://jazzyjackson.github.io/Geometric-Motif/roses.html)
