@@ -1,6 +1,6 @@
 # Geometric-Motif
 
-![](trefoil.png)
+![![trefoil](trefoil.html)](trefoil.png)
 
 ![](starcover.png)
 
@@ -10,4 +10,4 @@
 
 ![](starring.png)
 
-![](roses.png)
+![![full screen](https://jazzyjackson.github.io/Geometric-Motif/roses.html)](roses.png)
