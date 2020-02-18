@@ -6,11 +6,11 @@ Click the title to see the pattern full page -- it's an SVG tiled as a backgroun
 
 ## [6 fold Symmetry with interwoven edges](https://jazzyjackson.github.io/Geometric-Motif/starcover.html)
 136 KiB
-![](starcover-small.png)
+![](starcover.png)
 
 ## [Subset of Stars with two alternating rotations](https://jazzyjackson.github.io/Geometric-Motif/snowflakes.html)
 39 KiB
-![](snowflake-small.png)
+![](snowflake.png)
 
 ## [12 pointed stars repeating toward their centers](https://jazzyjackson.github.io/Geometric-Motif/stones.html)
 74 KiB
