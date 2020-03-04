@@ -16,10 +16,14 @@
         }
 
         x-lattice {
-            display: block;
+            display: flex;
+            align-items: center;
+            justify-content: center;    
             height: 100%;
             width: 100%;
-            background: url('./colorblock-tile.svg');
+            background: url('./creation.svg');
+            background-position: center;
+
         }
 
         x-lattice > svg {
@@ -29,28 +33,23 @@
 
         x-control {
             position: absolute;
-            top: 0;
-            height: 100%;
-            width: 500px;
+            bottom: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
         }
 
         x-control form {
             display: flex;
-            flex-direction: column;
-            justify-content: space-evenly;
-            background: url('./creation.svg');
-            mask: linear-gradient(to right, black, black 50%, transparent 80%);
-            width: 0px;
-            height: 100%;
-            transition: width 0.5s;
-        }
-
-        x-control:hover form {
-            width: 500px;
+            justify-content: center;
+            background: url(creation.svg);
+            background-size: 20%;
+            margin: 20px;
+            padding: 20px;
         }
 
         x-control form input {
-            margin: 10px 50px;
+            margin: 10px;
             width: 100px;
             height: 100px;
             border: none;
@@ -70,6 +69,10 @@
 
         x-control [name="startips"] {
             mask: url(startips.svg)
+        }
+
+        x-control [name="weight"] {
+            transform: rotate(270deg)
         }
     </style>
     </head>
@@ -93,7 +96,8 @@
     }
 
     function reloadBackground(){
-        $("x-lattice").style.background = `url(data:image/svg+xml;base64,${btoa($("x-lattice").innerHTML)}`
+        $("x-lattice").style.background = `url(data:image/svg+xml;base64,${btoa($("x-lattice").innerHTML)}) `
+        $("x-lattice").style.backgroundPosition = `center`
     }
 
     // pull this off location.query...
@@ -103,7 +107,7 @@
         stars: getRandomColor(),
         startips: getRandomColor(),
         between: getRandomColor(),
-        weight: Math.floor(Math.random() * 20) + 'px'
+        weight: Math.floor(Math.random() * 25) + 'px'
     }
 
     $ = document.querySelector.bind(document)
