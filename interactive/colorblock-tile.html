@@ -1,0 +1,185 @@
+<!--
+
+-->
+<head>
+    <meta charset="utf8">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            overflow: hidden;
+        }
+
+        x-lattice {
+            display: block;
+            height: 100%;
+            width: 100%;
+            background: url('./colorblock-tile.svg');
+        }
+
+        x-lattice > svg {
+            /* display: none; */
+        }
+
+
+        x-control {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: 500px;
+        }
+
+        x-control form {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            background: url('./creation.svg');
+            mask: linear-gradient(to right, black, black 50%, transparent 80%);
+            width: 0px;
+            height: 100%;
+            transition: width 0.5s;
+        }
+
+        x-control:hover form {
+            width: 500px;
+        }
+
+        x-control form input {
+            margin: 10px 50px;
+            width: 100px;
+            height: 100px;
+            border: none;
+        }
+
+        x-control [name="stars"] {
+            mask: url(stars.svg);
+        }
+
+        x-control [name="pentagons"] {
+            mask: url(pentagons.svg)
+        }
+
+        x-control [name="between"] {
+            mask: url(between.svg)
+        }
+
+        x-control [name="startips"] {
+            mask: url(startips.svg)
+        }
+    </style>
+    </head>
+    <body>
+    <x-lattice data-src="colorblock-tile"></x-lattice>
+    <x-control>
+        <form>
+            <input name="pentagons" type="color">
+            <input name="stars" type="color">
+            <input name="between" type="color">
+            <input name="startips" type="color">
+            <input name="edge" type="color">
+            <input name="weight" type="range" min="0" max="25" value="10">
+        </form>
+    </x-control>
+    <script>
+    function getRandomColor(){
+        with (Math) {
+            return '#' + floor(random() * pow(2, 24)).toString(16).padStart(6, 0)
+        }
+    }
+
+    function reloadBackground(){
+        $("x-lattice").style.background = `url(data:image/svg+xml;base64,${btoa($("x-lattice").innerHTML)}`
+    }
+
+    // pull this off location.query...
+    colors = {
+        edge: getRandomColor(),
+        pentagons: getRandomColor(),
+        stars: getRandomColor(),
+        startips: getRandomColor(),
+        between: getRandomColor(),
+        weight: Math.floor(Math.random() * 20) + 'px'
+    }
+
+    $ = document.querySelector.bind(document)
+    $$ = selector => Array.from(document.querySelectorAll(selector))
+    // document.body.addEventListener("mousemove", event => front.style.width = `${event.x}px`)
+    // grab pentagons, between, stars, startips, edge, edge-weight
+    fetch(
+        location.pathname.replace('html','svg')
+    ).then(
+        res => res.text()
+    ).then(
+        svgxml => {
+            $("x-lattice").innerHTML = svgxml
+            $$("x-lattice svg [style]").forEach(element => element.style = null)
+            $("x-lattice #edge").style.fill = "none"
+
+            $("x-lattice #edge").style.stroke = colors.edge
+            $("x-lattice #edge").style.strokeWidth = colors.weight
+
+            $("x-lattice #pentagons").style.fill = colors.pentagons
+            $("x-lattice #between").style.fill = colors.between
+            $("x-lattice #stars").style.fill = colors.stars
+            $("x-lattice #startips").style.fill = colors.startips
+
+            ;["pentagons","between","stars","startips"].forEach(tile => {
+                $(`x-control [name="${tile}"]`).value = colors[tile]
+                $(`x-control [name="${tile}"]`).addEventListener("input", event => {
+                    $(`x-lattice #${tile}`).style.fill = event.target.value
+                })
+                $(`x-control [name="${tile}"]`).addEventListener("change", event => {
+                    reloadBackground()
+                })
+            })
+
+            
+            $(`x-control [name="edge"]`).value = colors.edge
+            $(`x-control [name="edge"]`).addEventListener("input", event => {
+
+                $(`x-lattice #edge`).style.stroke = event.target.value
+            })
+            $(`x-control [name="edge"]`).addEventListener("change", event => {
+                reloadBackground()
+            })
+
+            $(`x-control [name="weight"]`).value = colors.weight
+            $(`x-control [name="weight"]`).addEventListener("input", event => {
+                $(`x-lattice #edge`).style.strokeWidth = event.target.value + 'px'
+            })
+            $(`x-control [name="weight"]`).addEventListener("change", event => {
+                reloadBackground()
+            })
+
+            reloadBackground()
+        }
+    )
+    // pentagons, between, stars, startips, edge
+    // edit the xml to have unique attributes I can just grab everything that needs to be grabbed
+    // select a child to use as the clip path
+
+
+    // step 1, tile svg background, replace...
+    // step 2, create new x-lattice and fade-out / auto-remove old ones, maybe 250ms or so, keep it moving...
+    // step 3, do the fade offset so it fades in from the edge, might make for good wave effects
+    // step 4, tile svg so each element is addressable
+    // update attriubutes by randomly selecting elements
+    // figure out how to tile elements by shifting relative to previous...
+
+    // setInterval(() => {
+    //     let color = getRandomColor()
+    //     Array
+    //     .from($("x-lattice > svg").querySelector('#startips').children)
+    //     .map(each => each.style.fill = color)
+
+    //     $("x-lattice").style.background = `url(data:image/svg+xml;base64,${btoa($("x-lattice").innerHTML)}`
+
+    // }, 500)
+    </script>
+    </body>
+    
