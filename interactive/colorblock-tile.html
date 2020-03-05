@@ -124,6 +124,18 @@
         weight: Math.floor(Math.random() * 25) + 'px'
     }, query2kv(location.search.slice(1)))
 
+    function getColors(){
+        return {
+            edge: $("x-lattice #edge").style.stroke
+            weight: $("x-lattice #edge").style.strokeWidth
+
+            pentagons: $("x-lattice #pentagons").style.fill
+            stars: $("x-lattice #stars").style.fill
+            startips: $("x-lattice #startips").style.fill
+            between: $("x-lattice #between").style.fill
+        }
+    }
+
     $ = document.querySelector.bind(document)
     $$ = selector => Array.from(document.querySelectorAll(selector))
     // document.body.addEventListener("mousemove", event => front.style.width = `${event.x}px`)
@@ -138,6 +150,7 @@
             $$("x-lattice svg [style]").forEach(element => element.style = null)
             $("x-lattice #edge").style.fill = "none"
 
+            
             $("x-lattice #edge").style.stroke = colors.edge
             $("x-lattice #edge").style.strokeWidth = colors.weight
 
