@@ -41,17 +41,17 @@
             justify-content: center;
         }
         
-        #settings {
+        form {
             display: flex;
             flex-direction: row;
         }
 
-        form {
+        #ctrl > div {
             display: flex;
             flex-direction: column;
             justify-content: center;
             background: url(creation.svg);
-            background-size: 20%;
+            background-size: 65px;
             margin: 20px;
             padding: 20px;
         }
@@ -97,21 +97,17 @@
             flex-direction: row;
             justify-content: space-between;
             margin-top: 20px;
+            background: white;
         }
 
-        menu button, form label {
+        menu a, form label {
             font-weight: bold;
             font-size: x-large;
             font-family: monospace;
         }
 
-        menu button {
+        menu a {
             padding: 10px;
-            background: white;
-        }
-
-        menu button:hover {
-            box-shadow: inset 3px 3px 3px grey;
         }
     </style>
     </head>
@@ -119,8 +115,8 @@
     <x-lattice id="xtl" data-src="colorblock-tile"></x-lattice>
     <x-preview id="svg"></x-preview >
     <x-control id="ctrl">
-        <form>
-            <div id="settings">
+        <div>
+            <form>
                 <label>pentagons<input name="pentagons" type="color"></label>
                 <label>stars<input name="stars" type="color"></label>
                 <label>between<input name="between" type="color"></label>  
@@ -128,14 +124,15 @@
                 <label>edges<input name="edge" type="color"></label> 
                 <label>width<input name="weight" type="range" min="0" max="32" value="10" step="0.25"></label>
                 <label>blur<input name="blur" type="range" min="0" max="4" value="0" step="0.25"></label>
-            </div>
+            </form>
             <menu>
-                <button><a title="Download the current motif in svg format" href="#">download</a></button>
-                <button><a title="Link to this motif" href="#">permalink</a></button>
-                <button><a title="Learn more about this project" href="#">about</a></button>
-                <button><a title="Learn more about this project" href="colorblock-tile.html">flip 2^32 coins</a></button>
+                <a title="Download the current motif in svg format" href="#">download</a>
+                <a title="Link to this motif" href="#">permalink</a>
+                <a title="Learn more about this project" href="#">about</a>
+                <a title="Learn more about this project" href="colorblock-tile.html">flip 2^32 coins</a>
+                <a title="Hide Controls" href="colorblock-tile.html">hide controls</a>
             </menu>
-        </form>
+        </div>
 
     </x-control>
     <script>
@@ -178,7 +175,7 @@
     }
 
     // pull this off location.query...
-    function getSettings(){
+    function getSettingsFromQueryString(){
         return Object.assign({
             edge: getRandomColor(),
             pentagons: getRandomColor(),
@@ -192,6 +189,18 @@
         )
     }
 
+    function getSettingsFromSVG(){
+        return {
+            edge: edge.style.stroke,
+            pentagons: pentagons.style.fill,
+            stars: stars.style.fill,
+            startips: startips.style.fill,
+            between: between.style.fill,
+            weight: edge.style.strokeWidth,
+            blur: motif.style.filter
+        }
+    }
+
     $ = document.querySelector.bind(document)
     $$ = selector => Array.from(document.querySelectorAll(selector))
     // document.body.addEventListener("mousemove", event => front.style.width = `${event.x}px`)
@@ -203,7 +212,7 @@
     ).then(
         svgxml => {
             svg.innerHTML = svgxml
-            let settings = getSettings()
+            let settings = getSettingsFromQueryString()
 
             $$("#svg svg [style]").forEach(element => element.style = null) //???
 
@@ -211,6 +220,7 @@
 
             edge.style.stroke = settings.edge
             edge.style.strokeWidth = settings.weight
+            motif.style.filter = settings.blur
 
             $("x-preview #pentagons").style.fill = settings.pentagons
             $("x-preview #between").style.fill = settings.between
