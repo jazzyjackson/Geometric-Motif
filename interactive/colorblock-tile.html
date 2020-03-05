@@ -122,7 +122,7 @@
                 <label>between<input name="between" type="color"></label>  
                 <label>spokes<input name="startips" type="color"></label> 
                 <label>edges<input name="edge" type="color"></label> 
-                <label>width<input name="weight" type="range" min="0" max="32" value="10" step="0.25"></label>
+                <label>width<input name="weight" type="range" min="0" max="32" step="0.25"></label>
                 <label>blur<input name="blur" type="range" min="0" max="4" value="0" step="0.25"></label>
             </form>
             <menu>
@@ -150,6 +150,9 @@
         const cycle = '100' // ms
         oldBackground = xtl.style.background || `url(creation.svg)`
         newBackground = `url(data:image/svg+xml;base64,${btoa(svg.innerHTML)}) `
+
+        querystring = kv2query(getSettingsFromSVG())
+        history.pushState({}, "", location.pathname + '?' + querystring)
 
         document.body.style.background = oldBackground // repaint body
         ;[xtl.style.width, xtl.style.height] = [0,0] // minimize lattice
@@ -182,22 +185,34 @@
             stars: getRandomColor(),
             startips: getRandomColor(),
             between: getRandomColor(),
-            weight: Math.floor(Math.random() * 32) + 'px',
-            blur: Math.floor(Math.random() * 32) + 'px'
+            weight: Math.floor(Math.random() * 32),
+            blur: Math.floor(Math.random() * 32)
         },
             query2kv(location.search.slice(1))
         )
     }
 
+    function parseColor(rgbstring){
+        return '#' +
+            rgbstring
+            .match(/\d+/g)
+            .map(val =>
+                parseInt(val)
+                .toString(16)
+                .padStart(2, 0)
+            )
+            .join('')
+    }
+
     function getSettingsFromSVG(){
         return {
-            edge: edge.style.stroke,
-            pentagons: pentagons.style.fill,
-            stars: stars.style.fill,
-            startips: startips.style.fill,
-            between: between.style.fill,
-            weight: edge.style.strokeWidth,
-            blur: motif.style.filter
+            edge: parseColor(edge.style.stroke),
+            pentagons: parseColor(pentagons.style.fill),
+            stars: parseColor(stars.style.fill),
+            startips: parseColor(startips.style.fill),
+            between: parseColor(between.style.fill),
+            weight: parseInt(edge.style.strokeWidth) || 0,
+            blur: parseInt(motif.style.filter) || 0
         }
     }
 
@@ -214,6 +229,7 @@
             svg.innerHTML = svgxml
             let settings = getSettingsFromQueryString()
 
+            console.log("SETTING", settings)
             $$("#svg svg [style]").forEach(element => element.style = null) //???
 
             edge.style.fill = "none"
@@ -226,6 +242,8 @@
             $("x-preview #between").style.fill = settings.between
             $("x-preview #stars").style.fill = settings.stars
             $("x-preview #startips").style.fill = settings.startips
+
+
 
             ;["pentagons","between","stars","startips"].forEach(tile => {
                 $(`x-control [name="${tile}"]`).value = settings[tile]
