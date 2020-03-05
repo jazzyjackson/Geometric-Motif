@@ -11,27 +11,29 @@
             padding: 0;
         }
 
+        /* body is used as temporary placeholder for old backgrounds while new lattice takes over */
         body {
             overflow: hidden;
+            background: url('./creation.svg');
         }
 
-        x-lattice {
+        body, #xtl, #svg {
+            height:100%;
+            width:100%;
             display: flex;
             align-items: center;
-            justify-content: center;    
-            height: 100%;
-            width: 100%;
-            background: url('./creation.svg');
-            background-position: center;
-
+            justify-content: center;
         }
 
-        x-lattice > svg {
-            /* display: none; */
+        /* this is the element that is repainted on update -- its size changes to prevent flashes */
+        #xtl, #svg {
+            position: absolute;
+            transition: width, height 100ms;
         }
 
+        /* this is where the SVG lives, updated live, in front of everything else*/
 
-        x-control {
+        #ctrl {
             position: absolute;
             bottom: 0;
             width: 100%;
@@ -39,7 +41,7 @@
             justify-content: center;
         }
 
-        x-control form {
+        form {
             display: flex;
             justify-content: center;
             background: url(creation.svg);
@@ -48,47 +50,62 @@
             padding: 20px;
         }
 
-        x-control form input {
+        form input {
             margin: 10px;
             width: 100px;
             height: 100px;
             border: none;
         }
 
-        x-control [name="stars"] {
+        form label {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: x-large;
+            font-family: monospace;
+            padding: 12px 0;
+            background: white;
+        }
+
+        form [name="stars"] {
             mask: url(stars.svg);
         }
 
-        x-control [name="pentagons"] {
+        form [name="pentagons"] {
             mask: url(pentagons.svg)
         }
 
-        x-control [name="between"] {
+        form [name="between"] {
             mask: url(between.svg)
         }
 
-        x-control [name="startips"] {
+        form [name="startips"] {
             mask: url(startips.svg)
         }
 
-        x-control [name="weight"] {
+        form [type="range"] {
             transform: rotate(270deg)
         }
     </style>
     </head>
     <body>
-    <x-lattice data-src="colorblock-tile"></x-lattice>
-    <x-control>
+    <x-lattice id="xtl" data-src="colorblock-tile"></x-lattice>
+    <x-preview id="svg"></x-preview >
+    <x-control id="ctrl">
         <form>
-            <input name="pentagons" type="color">
-            <input name="stars" type="color">
-            <input name="between" type="color">
-            <input name="startips" type="color">
-            <input name="edge" type="color">
-            <input name="weight" type="range" min="0" max="25" value="10">
+            <label>pentagons<input name="pentagons" type="color"></label>
+            <label>stars<input name="stars" type="color"></label>
+            <label>between<input name="between" type="color"></label>  
+            <label>spokes<input name="startips" type="color"></label> 
+            <label>edges<input name="edge" type="color"></label> 
+            <label>width<input name="weight" type="range" min="0" max="25" value="10"></label>
+            <label>blur<input name="blur" type="range" min="0" max="10" value="0"></label>
         </form>
     </x-control>
     <script>
+
     function getRandomColor(){
         with (Math) {
             return '#' + floor(random() * pow(2, 24)).toString(16).padStart(6, 0)
@@ -96,8 +113,20 @@
     }
 
     function reloadBackground(){
-        $("x-lattice").style.background = `url(data:image/svg+xml;base64,${btoa($("x-lattice").innerHTML)}) `
-        $("x-lattice").style.backgroundPosition = `center`
+        
+        // apply current background to body
+
+        const cycle = '100' // ms
+        oldBackground = xtl.style.background || `url(creation.svg)`
+        newBackground = `url(data:image/svg+xml;base64,${btoa(svg.innerHTML)}) `
+
+        document.body.style.background = oldBackground // repaint body
+        ;[xtl.style.width, xtl.style.height] = [0,0] // minimize lattice
+        setTimeout(()=> {
+            xtl.style.background = newBackground
+            xtl.style.backgroundPosition = `center`
+            ;[xtl.style.width, xtl.style.height] = ['100%','100%'] // maximize lattice
+        }, cycle) // repaint lattice
     }
 
     function kv2query(kv = {}){
@@ -115,14 +144,19 @@
     }
 
     // pull this off location.query...
-    colors = Object.assign({
-        edge: getRandomColor(),
-        pentagons: getRandomColor(),
-        stars: getRandomColor(),
-        startips: getRandomColor(),
-        between: getRandomColor(),
-        weight: Math.floor(Math.random() * 25) + 'px'
-    }, query2kv(location.search.slice(1)))
+    function getSettings(){
+        return Object.assign({
+            edge: getRandomColor(),
+            pentagons: getRandomColor(),
+            stars: getRandomColor(),
+            startips: getRandomColor(),
+            between: getRandomColor(),
+            weight: Math.floor(Math.random() * 32) + 'px',
+            blur: Math.floor(Math.random() * 32) + 'px'
+        },
+            query2kv(location.search.slice(1))
+        )
+    }
 
     $ = document.querySelector.bind(document)
     $$ = selector => Array.from(document.querySelectorAll(selector))
@@ -134,22 +168,25 @@
         res => res.text()
     ).then(
         svgxml => {
-            $("x-lattice").innerHTML = svgxml
-            $$("x-lattice svg [style]").forEach(element => element.style = null)
-            $("x-lattice #edge").style.fill = "none"
+            svg.innerHTML = svgxml
+            let settings = getSettings()
 
-            $("x-lattice #edge").style.stroke = colors.edge
-            $("x-lattice #edge").style.strokeWidth = colors.weight
+            $$("#svg svg [style]").forEach(element => element.style = null) //???
 
-            $("x-lattice #pentagons").style.fill = colors.pentagons
-            $("x-lattice #between").style.fill = colors.between
-            $("x-lattice #stars").style.fill = colors.stars
-            $("x-lattice #startips").style.fill = colors.startips
+            edge.style.fill = "none"
+
+            edge.style.stroke = settings.edge
+            edge.style.strokeWidth = settings.weight
+
+            $("x-preview #pentagons").style.fill = settings.pentagons
+            $("x-preview #between").style.fill = settings.between
+            $("x-preview #stars").style.fill = settings.stars
+            $("x-preview #startips").style.fill = settings.startips
 
             ;["pentagons","between","stars","startips"].forEach(tile => {
-                $(`x-control [name="${tile}"]`).value = colors[tile]
+                $(`x-control [name="${tile}"]`).value = settings[tile]
                 $(`x-control [name="${tile}"]`).addEventListener("input", event => {
-                    $(`x-lattice #${tile}`).style.fill = event.target.value
+                    $(`x-preview #${tile}`).style.fill = event.target.value
                 })
                 $(`x-control [name="${tile}"]`).addEventListener("change", event => {
                     reloadBackground()
@@ -157,20 +194,26 @@
             })
 
             
-            $(`x-control [name="edge"]`).value = colors.edge
-            $(`x-control [name="edge"]`).addEventListener("input", event => {
-
-                $(`x-lattice #edge`).style.stroke = event.target.value
-            })
-            $(`x-control [name="edge"]`).addEventListener("change", event => {
+            $(`#ctrl [name="edge"]`).value = settings.edge
+            $(`#ctrl [name="edge"]`).addEventListener("input", event => 
+                edge.style.stroke = event.target.value + 'px'
+            )
+            $(`#ctrl [name="edge"]`).addEventListener("change", event => {
                 reloadBackground()
             })
 
-            $(`x-control [name="weight"]`).value = colors.weight
-            $(`x-control [name="weight"]`).addEventListener("input", event => {
-                $(`x-lattice #edge`).style.strokeWidth = event.target.value + 'px'
+            $(`#ctrl [name="weight"]`).value = settings.weight
+            $(`#ctrl [name="weight"]`).addEventListener("input", event => {
+                edge.style.strokeWidth = event.target.value + 'px'
             })
-            $(`x-control [name="weight"]`).addEventListener("change", event => {
+            $(`#ctrl [name="weight"]`).addEventListener("change", event => {
+                reloadBackground()
+            })
+
+            $(`#ctrl [name="blur"]`).addEventListener("input", event => {
+                $(`x-preview #motif`).style.filter = `blur(${event.target.value}px)`
+            })
+            $(`#ctrl [name="blur"]`).addEventListener("change", event => {
                 reloadBackground()
             })
 
