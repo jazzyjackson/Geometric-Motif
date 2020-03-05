@@ -40,6 +40,29 @@
             display: flex;
             justify-content: center;
         }
+        
+
+        menu {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding-left: 20px;
+        }
+
+        menu button, form label {
+            font-weight: bold;
+            font-size: x-large;
+            font-family: monospace;
+        }
+
+        menu button {
+            padding: 10px;
+            background: white;
+        }
+
+        menu button:hover {
+            box-shadow: inset 3px 3px 3px grey;
+        }
 
         form {
             display: flex;
@@ -62,9 +85,6 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            font-weight: bold;
-            font-size: x-large;
-            font-family: monospace;
             padding: 12px 0;
             background: white;
         }
@@ -103,6 +123,12 @@
             <label>width<input name="weight" type="range" min="0" max="32" value="10" step="0.25"></label>
             <label>blur<input name="blur" type="range" min="0" max="4" value="0" step="0.25"></label>
         </form>
+        <menu>
+            <button><a title="Download the current motif in svg format" href="#">download</a></button>
+            <button><a title="Link to this motif" href="#">permalink</a></button>
+            <button><a title="Learn more about this project" href="#">about</a></button>
+            <button><a title="Learn more about this project" href="#">flip 2^32 coins</a></button>
+        </menu>
     </x-control>
     <script>
 
