@@ -129,13 +129,79 @@
                 <a title="Download the current motif in svg format" href="#">download</a>
                 <a title="Link to this motif" href="#">permalink</a>
                 <a title="Learn more about this project" href="#">about</a>
-                <a title="Learn more about this project" href="colorblock-tile.html">flip 2^32 coins</a>
+                <a title="Learn more about this project" href="colorblock-tile.html">flip 130 coins</a>
                 <a title="Hide Controls" href="colorblock-tile.html">hide controls</a>
             </menu>
         </div>
 
     </x-control>
     <script>
+    $ = document.querySelector.bind(document)
+    $$ = selector => Array.from(document.querySelectorAll(selector))
+    // document.body.addEventListener("mousemove", event => front.style.width = `${event.x}px`)
+    // grab pentagons, between, stars, startips, edge, edge-weight
+    fetch(
+        location.pathname.replace('html','svg')
+    ).then(
+        res => res.text()
+    ).then(
+        svgxml => {
+            svg.innerHTML = svgxml
+            let settings = getSettingsFromQueryString()
+
+            console.log("SETTING", settings)
+            $$("#svg svg [style]").forEach(element => element.style = null) //???
+
+            edge.style.fill = "none"
+
+            edge.style.stroke = settings.edge
+            edge.style.strokeWidth = settings.weight
+            motif.style.filter = settings.blur
+
+            $("x-preview #pentagons").style.fill = settings.pentagons
+            $("x-preview #between").style.fill = settings.between
+            $("x-preview #stars").style.fill = settings.stars
+            $("x-preview #startips").style.fill = settings.startips
+
+
+
+            ;["pentagons","between","stars","startips"].forEach(tile => {
+                $(`x-control [name="${tile}"]`).value = settings[tile]
+                $(`x-control [name="${tile}"]`).addEventListener("input", event => {
+                    $(`x-preview #${tile}`).style.fill = event.target.value
+                })
+                $(`x-control [name="${tile}"]`).addEventListener("change", event => {
+                    reloadBackground()
+                })
+            })
+
+            
+            $(`#ctrl [name="edge"]`).value = settings.edge
+            $(`#ctrl [name="edge"]`).addEventListener("input", event => 
+                edge.style.stroke = event.target.value + 'px'
+            )
+            $(`#ctrl [name="edge"]`).addEventListener("change", event => {
+                reloadBackground()
+            })
+
+            $(`#ctrl [name="weight"]`).value = settings.weight
+            $(`#ctrl [name="weight"]`).addEventListener("input", event => {
+                edge.style.strokeWidth = event.target.value + 'px'
+            })
+            $(`#ctrl [name="weight"]`).addEventListener("change", event => {
+                reloadBackground()
+            })
+
+            $(`#ctrl [name="blur"]`).addEventListener("input", event => {
+                $(`x-preview #motif`).style.filter = `blur(${event.target.value}px)`
+            })
+            $(`#ctrl [name="blur"]`).addEventListener("change", event => {
+                reloadBackground()
+            })
+
+            reloadBackground()
+        }
+    )
 
     function getRandomColor(){
         with (Math) {
@@ -215,73 +281,6 @@
             blur: parseInt(motif.style.filter) || 0
         }
     }
-
-    $ = document.querySelector.bind(document)
-    $$ = selector => Array.from(document.querySelectorAll(selector))
-    // document.body.addEventListener("mousemove", event => front.style.width = `${event.x}px`)
-    // grab pentagons, between, stars, startips, edge, edge-weight
-    fetch(
-        location.pathname.replace('html','svg')
-    ).then(
-        res => res.text()
-    ).then(
-        svgxml => {
-            svg.innerHTML = svgxml
-            let settings = getSettingsFromQueryString()
-
-            console.log("SETTING", settings)
-            $$("#svg svg [style]").forEach(element => element.style = null) //???
-
-            edge.style.fill = "none"
-
-            edge.style.stroke = settings.edge
-            edge.style.strokeWidth = settings.weight
-            motif.style.filter = settings.blur
-
-            $("x-preview #pentagons").style.fill = settings.pentagons
-            $("x-preview #between").style.fill = settings.between
-            $("x-preview #stars").style.fill = settings.stars
-            $("x-preview #startips").style.fill = settings.startips
-
-
-
-            ;["pentagons","between","stars","startips"].forEach(tile => {
-                $(`x-control [name="${tile}"]`).value = settings[tile]
-                $(`x-control [name="${tile}"]`).addEventListener("input", event => {
-                    $(`x-preview #${tile}`).style.fill = event.target.value
-                })
-                $(`x-control [name="${tile}"]`).addEventListener("change", event => {
-                    reloadBackground()
-                })
-            })
-
-            
-            $(`#ctrl [name="edge"]`).value = settings.edge
-            $(`#ctrl [name="edge"]`).addEventListener("input", event => 
-                edge.style.stroke = event.target.value + 'px'
-            )
-            $(`#ctrl [name="edge"]`).addEventListener("change", event => {
-                reloadBackground()
-            })
-
-            $(`#ctrl [name="weight"]`).value = settings.weight
-            $(`#ctrl [name="weight"]`).addEventListener("input", event => {
-                edge.style.strokeWidth = event.target.value + 'px'
-            })
-            $(`#ctrl [name="weight"]`).addEventListener("change", event => {
-                reloadBackground()
-            })
-
-            $(`#ctrl [name="blur"]`).addEventListener("input", event => {
-                $(`x-preview #motif`).style.filter = `blur(${event.target.value}px)`
-            })
-            $(`#ctrl [name="blur"]`).addEventListener("change", event => {
-                reloadBackground()
-            })
-
-            reloadBackground()
-        }
-    )
     // pentagons, between, stars, startips, edge
     // edit the xml to have unique attributes I can just grab everything that needs to be grabbed
     // select a child to use as the clip path
