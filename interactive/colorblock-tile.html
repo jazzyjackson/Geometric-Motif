@@ -126,11 +126,10 @@
                 <label>blur<input name="blur" type="range" min="0" max="4" value="0" step="0.25"></label>
             </form>
             <menu>
-                <a title="Download the current motif in svg format" href="#">download</a>
+                <a id="download" title="Download the current motif in svg format" href="#">download</a>
                 <a title="Link to this motif" href="#">permalink</a>
-                <a title="Learn more about this project" href="#">about</a>
-                <a title="Learn more about this project" href="colorblock-tile.html">flip 130 coins</a>
-                <a title="Hide Controls" href="colorblock-tile.html">hide controls</a>
+                <a title="Learn more about this project" href="mosaic.coltenj.com/about">about</a>
+                <a title="Randomly choose a 128 bit number" href="colorblock-tile.html">flip 128 coins</a>
             </menu>
         </div>
 
@@ -155,8 +154,8 @@
             edge.style.fill = "none"
 
             edge.style.stroke = settings.edge
-            edge.style.strokeWidth = settings.weight
-            motif.style.filter = settings.blur
+            edge.style.strokeWidth = settings.weight + 'px'
+            motif.style.filter = `blur(${settings.blur}px)`
 
             $("x-preview #pentagons").style.fill = settings.pentagons
             $("x-preview #between").style.fill = settings.between
@@ -192,6 +191,7 @@
                 reloadBackground()
             })
 
+            $(`#ctrl [name="blur"]`).value = settings.blur
             $(`#ctrl [name="blur"]`).addEventListener("input", event => {
                 $(`x-preview #motif`).style.filter = `blur(${event.target.value}px)`
             })
@@ -216,6 +216,8 @@
         const cycle = '100' // ms
         oldBackground = xtl.style.background || `url(creation.svg)`
         newBackground = `url(data:image/svg+xml;base64,${btoa(svg.innerHTML)}) `
+        download.setAttribute(`href`, `data:application/octet-stream;charset=utf-16le;base64,${btoa(svg.innerHTML)}`)
+        download.setAttribute(`download`,`motif-tile-${getRandomColor().slice(1)}.svg`)
 
         querystring = kv2query(getSettingsFromSVG())
         history.pushState({}, "", location.pathname + '?' + querystring)
@@ -258,6 +260,10 @@
         )
     }
 
+    function parseFloat(floatstring){
+        return floatstring && floatstring.match(/\d+\.{0,}\d*/).pop()
+    }
+
     function parseColor(rgbstring){
         return '#' +
             rgbstring
@@ -277,8 +283,8 @@
             stars: parseColor(stars.style.fill),
             startips: parseColor(startips.style.fill),
             between: parseColor(between.style.fill),
-            weight: parseInt(edge.style.strokeWidth) || 0,
-            blur: parseInt(motif.style.filter) || 0
+            weight: parseFloat(edge.style.strokeWidth) || 0,
+            blur: parseFloat(motif.style.filter) || 0
         }
     }
     // pentagons, between, stars, startips, edge
