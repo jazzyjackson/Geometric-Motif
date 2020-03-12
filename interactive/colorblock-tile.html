@@ -122,7 +122,7 @@
                 <label>between<input name="between" type="color"></label>  
                 <label>spokes<input name="startips" type="color"></label> 
                 <label>edges<input name="edge" type="color"></label> 
-                <label>width<input name="weight" type="range" min="0" max="32" step="0.25"></label>
+                <label>width<input name="weight" type="range" min="0" max="8" step="0.125"></label>
                 <label>blur<input name="blur" type="range" min="0" max="4" value="0" step="0.25"></label>
             </form>
             <menu>
@@ -253,7 +253,7 @@
             stars: getRandomColor(),
             startips: getRandomColor(),
             between: getRandomColor(),
-            weight: Math.floor(Math.random() * 32),
+            weight: Math.floor(Math.random() * 64) / 8,
             blur: 0
         },
             query2kv(location.search.slice(1))
