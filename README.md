@@ -4,6 +4,9 @@ These patterns were made in Inkscape as experiments in a weekend workshop series
 
 Click the title to see the pattern full page -- it's an SVG tiled as a background image so you can zoom in and out with your browser.
 
+## [6 fold Symmetry with interactive controls](https://jazzyjackson.github.io/Geometric-Motif/interactive/colorblock-tile.html)
+![](interactive.png)
+
 ## [6 fold Symmetry with interwoven edges](https://jazzyjackson.github.io/Geometric-Motif/complete/starcover.html)
 136 KiB
 ![](starcover.png)
