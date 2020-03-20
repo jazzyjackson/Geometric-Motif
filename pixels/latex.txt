@@ -1,0 +1,23 @@
+\begin{eqnarray}
+& \boldsymbol{Circle} \\
+& radius : r 
+& diameter : 2r \\
+& \boldsymbol{Inscribed \ Hexagon} \\
+& width  :  2r 
+& height  :  r \sqrt 3 & \\
+& \boldsymbol{Six \ point \ star} \\
+& width : \frac{3r}{2} 
+& height : r \sqrt 3  \\
+& \boldsymbol{Interior \ Hexagon} \\
+& width: \frac{2r}{3} 
+& height: \frac{r\sqrt 3}{3} \\
+& \boldsymbol{Interior \ Triangle} \\
+& side: \frac{r}{3} 
+& height: \frac{r \sqrt 3}{6} \\
+& \boldsymbol{Deflated \ Hexagon:} \\
+& width: \frac{7r}{6}
+& height: \frac{2r\sqrt3}{3}
+
+\end{eqnarray}
+
+https://viereck.ch/latex-to-svg/

@@ -1,0 +1,16 @@
+:root {
+    --star-height: 500px;
+    --motif-height: 500px;
+    --star-width: 433.017px;
+    --hex-height: 333.333px; /* 2/3 h */
+    --hex-width: 336.791px; /* ??? */
+    --sqrt3: 1.732050807568877;
+    --motif-width: Calc(var(--motif-height) * var(--sqrt3));
+    /* firefox arrives at 866.033, chrome arrives at 866.016 */
+    /* --motif-width: 866.0254px; */
+    /* Calc(--motif-height / 2) */
+    --v-offset: -250px;
+    /* width * 5/36 */
+    /* --h-offset: -120.281px; */
+    --h-offset: Calc(var(--motif-width) * -5 / 36);
+}

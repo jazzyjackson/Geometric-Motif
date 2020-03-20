@@ -1,0 +1,127 @@
+<head>
+    <style>
+        
+        :root {
+            --√3: 1.732050807568877;
+            --R: 250px;
+            --√3×R: Calc(var(--√3) * var(--R));
+
+            --star-height: var(--√3×R);
+            --star-width:  Calc(3 / 2 * var(--R));
+
+            --h-offset: Calc(5 / 12 * var(--R));
+            --v-offset: Calc(1 / 2 * var(--star-height));
+
+            --hex-width:  Calc(7 / 6 * var(--radius));
+            --hex-height: Calc(2 / 3 * var(--star-height));
+        }
+
+        section {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: var(--v-offset);
+        }
+
+        star, hexleft, hexright {
+            display: flex;
+            align-items: center;
+        }
+
+        star::before, hexleft::before, hexright::before {
+            content: "";
+            display: block;
+            width: 288.67px;
+            height: 288.67px;
+            border-radius: 100%;
+            /* background: purple; */
+        }
+
+        star {
+            background: blue;
+            height: var(--star-height);
+            width: var(--star-width);
+
+            mask: url(star.svg);
+            -webkit-mask: url(star.svg);
+
+            justify-content: center;
+
+        }
+
+        hexleft, hexright {
+            background: gray;
+            width: var(--hex-width);
+            height: var(--hex-height);
+        }
+
+        hexleft {
+            mask: url(hexleft.svg);
+            -webkit-mask: url(hexleft.svg);
+            margin-right: var(--h-offset);
+
+            justify-content: flex-start;
+
+        }
+
+        hexright {
+            mask: url(hexright.svg);
+            -webkit-mask: url(hexright.svg);
+            margin-left: var(--h-offset);
+
+            justify-content: flex-end;
+
+        }
+
+    </style>
+</head>
+<body>
+    <section>
+        <star></star>
+        <hexright></hexright>
+        <hexleft></hexleft>
+        <star></star>
+    </section>
+    <section>
+        <hexright></hexright>
+        <hexleft></hexleft>
+        <star></star>
+        <hexright></hexright>
+    </section>
+    <section>
+        <star></star>
+        <hexright></hexright>
+        <hexleft></hexleft>
+        <star></star>
+    </section>
+    <section>
+        <hexright></hexright>
+        <hexleft></hexleft>
+        <star></star>
+        <hexright></hexright>
+    </section>
+    <section>
+        <star></star>
+        <hexright></hexright>
+        <hexleft></hexleft>
+        <star></star>
+    </section>
+    <section>
+        <hexright></hexright>
+        <hexleft></hexleft>
+        <star></star>
+        <hexright></hexright>
+    </section>
+    <section>
+        <star></star>
+        <hexright></hexright>
+        <hexleft></hexleft>
+        <star></star>
+    </section>
+    <section>
+        <hexright></hexright>
+        <hexleft></hexleft>
+        <star></star>
+        <hexright></hexright>
+    </section>
+</body>

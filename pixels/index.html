@@ -24,27 +24,82 @@
             justify-content: start;
             align-content: start;
         }
-        .latticework {
-            border: 1px solid black;
-            width: 50px;
-            height: 50px;
-            /* position: absolute; */
-            
+        row {
+            /* border: 2px solid green; */
+            display: flex;
+            margin-bottom: -50px;
         }
+        col {
+            border: 1px solid black;
+            /* width: 100px; */
+            /* height: 100px; */
+            display: inline-block;
+            /* position: absolute; */
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        col:hover {
+            opacity: 1;
+        }
+        
+        [pattern^="hex"]::before {
+            display: block;
+            width: 60px;
+            height: 60px;
+            content: "";
+            /* background: green; */
+            pointer-events: auto;
+        }
+        [pattern="star"]::before {
+            display: block;
+            width: 60px;
+            height: 60px;
+            margin-top: 20px;
+            margin-left: 13px;
+            content: "";
+            /* background: purple; */
+            pointer-events: auto;
+
+        }
+
         section {
-            /* position: relative; */
+            position: relative;
+            top: Calc(100.00001px / -2);
+            left: Calc(86.602562px / -2);
             /* left: -24.067px; */
             /* bottom: 16.666px; */
         }
 
-        [type="0"] {
+        [pattern="hexright"] {
+            position: relative;
+            margin-left: -24.067px;
+            margin-top: 16.666px;
+        }
+        [pattern="hexleft"] {
+            position: relative;
+            margin-top: 16.666px;
+        }
+
+        [pattern="hexleft"] {
             background: red;
+            mask: url(hexleft.svg);
+            width: 67.381981px;
+            height: 66.668167px;
+            margin-right: -24.5px;
         }
-        [type="1"] {
+        [pattern="star"] {
             background: blue;
+            mask: url(star.svg);
+            height: 100.00001px;
+            width: 86.602562px;
+            
         }
-        [type="2"] {
+        [pattern="hexright"] {
             background: black;
+            mask: url(hexright.svg);
+            height: 66.678314px;
+            width: 67.368187px;
         }
     </style>
 </head>
@@ -58,29 +113,38 @@ function add_lattice(graph){
 function build_lattice(event, size = 50, n_color = 0){
     // iterate through existing lattice and remove everything
     // an optimization would be to recalculate how many we have now...
-    Array.from(document.querySelectorAll('.latticework'), element => element.remove())
+    Array.from(document.querySelectorAll('section'), element => element.remove())
     let {width, height} = document.body.getClientRects()[0] 
 
     let n_rows = Math.floor(height / size)
     let n_columns = Math.floor(width / size)
+    // to alternate between even rows and odd rows, rotate classes based on row_index % 2, 
+    // so maybe put the symbols in an array, and then the row index mode two can be kind of what index to start at until you get to the end 
+    let motif = ["star","hexright","hexleft"]
 
-    Array.from(new Array(n_rows), (_, row_index) => {
-        Array.from(new Array(n_columns), (_, column_index) => {
-            add_lattice(
-                {div: {
-                    class: "latticework",
-                    col: column_index,
-                    row: row_index,
-                    index: column_index + (row_index * n_columns), // assign round robin type of shape
-                    // style: {
-                    //     left: column_index * size + 'px',
-                    //     top: row_index * size + 'px',
-                    //     // background: (column_index + (row_index * n_columns)) < n_color ? "blue" : "white"
-                    // }
-                }}
-            )
-        })
-    })
+    // for each col, the evenness of the row index will be added as a bias to your index
+    // index + bias % motif.length
+
+    add_lattice({section: {
+        childNodes: Array.from(new Array(n_rows), (_, row_index) => 
+            ({row: {
+                childNodes: Array.from(new Array(n_columns), (_, column_index) =>
+                    ({col: {
+                        class: "latticework",
+                        col: column_index,
+                        row: row_index,
+                        index: column_index + (row_index * n_columns), // assign round robin type of shape
+                        pattern: motif[/*index*/ (column_index /* + bias */ + (row_index % 2)) /* mod motif.length */ % motif.length]
+                        // style: {
+                        //     left: column_index * size + 'px',
+                        //     top: row_index * size + 'px',
+                        //     // background: (column_index + (row_index * n_columns)) < n_color ? "blue" : "white"
+                        // }
+                    }}) // end col
+                ) // end childNodes
+            }}) // end row
+        ) // end childNodes
+    }}) // end section end lattice
 }
 // should probably set a ms debounce to not redraw until it stops changing
 window.onresize = build_lattice
