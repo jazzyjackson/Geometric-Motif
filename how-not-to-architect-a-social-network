@@ -1,0 +1,282 @@
+<html class="js" lang="en-US"><head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width">
+	<link rel="profile" href="http://gmpg.org/xfn/11">
+	<link rel="pingback" href="https://coltenj.com/xmlrpc.php">
+	<!--[if lt IE 9]>
+	<script src="https://coltenj.com/wp-content/themes/twentyfifteen/js/html5.js"></script>
+	<![endif]-->
+	<script>(function(html){html.className = html.className.replace(/\bno-js\b/,'js')})(document.documentElement);</script>
+<title>How not to architect a social network on its way to the proverbial moon – coltenj.com</title>
+<script>window.koko_analytics = {"tracker_url":"https:\/\/coltenj.com\/wp-admin\/admin-ajax.php?action=koko_analytics_collect","post_id":416,"use_cookie":0,"cookie_path":"\/","honor_dnt":true};</script><link rel="dns-prefetch" href="//coltenj.com">
+<link rel="dns-prefetch" href="//fonts.googleapis.com">
+<link rel="dns-prefetch" href="//s.w.org">
+<link href="https://fonts.gstatic.com" crossorigin="" rel="preconnect">
+<link rel="alternate" type="application/rss+xml" title="coltenj.com » Feed" href="https://coltenj.com/feed/">
+<link rel="alternate" type="application/rss+xml" title="coltenj.com » Comments Feed" href="https://coltenj.com/comments/feed/">
+<link rel="alternate" type="application/rss+xml" title="coltenj.com » How not to architect a social network on its way to the proverbial moon Comments Feed" href="https://coltenj.com/how-not-to-architect-a-social-network-on-its-way-to-the-proverbial-moon/feed/">
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/12.0.0-1\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/12.0.0-1\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/coltenj.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=5.3.6"}};
+			!function(e,a,t){var r,n,o,i,p=a.createElement("canvas"),s=p.getContext&&p.getContext("2d");function c(e,t){var a=String.fromCharCode;s.clearRect(0,0,p.width,p.height),s.fillText(a.apply(this,e),0,0);var r=p.toDataURL();return s.clearRect(0,0,p.width,p.height),s.fillText(a.apply(this,t),0,0),r===p.toDataURL()}function l(e){if(!s||!s.fillText)return!1;switch(s.textBaseline="top",s.font="600 32px Arial",e){case"flag":return!c([127987,65039,8205,9895,65039],[127987,65039,8203,9895,65039])&&(!c([55356,56826,55356,56819],[55356,56826,8203,55356,56819])&&!c([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]));case"emoji":return!c([55357,56424,55356,57342,8205,55358,56605,8205,55357,56424,55356,57340],[55357,56424,55356,57342,8203,55358,56605,8203,55357,56424,55356,57340])}return!1}function d(e){var t=a.createElement("script");t.src=e,t.defer=t.type="text/javascript",a.getElementsByTagName("head")[0].appendChild(t)}for(i=Array("flag","emoji"),t.supports={everything:!0,everythingExceptFlag:!0},o=0;o<i.length;o++)t.supports[i[o]]=l(i[o]),t.supports.everything=t.supports.everything&&t.supports[i[o]],"flag"!==i[o]&&(t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&t.supports[i[o]]);t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&!t.supports.flag,t.DOMReady=!1,t.readyCallback=function(){t.DOMReady=!0},t.supports.everything||(n=function(){t.readyCallback()},a.addEventListener?(a.addEventListener("DOMContentLoaded",n,!1),e.addEventListener("load",n,!1)):(e.attachEvent("onload",n),a.attachEvent("onreadystatechange",function(){"complete"===a.readyState&&t.readyCallback()})),(r=t.source||{}).concatemoji?d(r.concatemoji):r.wpemoji&&r.twemoji&&(d(r.twemoji),d(r.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script><script src="https://coltenj.com/wp-includes/js/wp-emoji-release.min.js?ver=5.3.6" type="text/javascript" defer=""></script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+	<link rel="stylesheet" id="wp-block-library-css" href="https://coltenj.com/wp-includes/css/dist/block-library/style.min.css?ver=5.3.6" type="text/css" media="all">
+<link rel="stylesheet" id="wp-block-library-theme-css" href="https://coltenj.com/wp-includes/css/dist/block-library/theme.min.css?ver=5.3.6" type="text/css" media="all">
+<link rel="stylesheet" id="twentyfifteen-fonts-css" href="https://fonts.googleapis.com/css?family=Noto+Sans%3A400italic%2C700italic%2C400%2C700%7CNoto+Serif%3A400italic%2C700italic%2C400%2C700%7CInconsolata%3A400%2C700&amp;subset=latin%2Clatin-ext" type="text/css" media="all">
+<link rel="stylesheet" id="genericons-css" href="https://coltenj.com/wp-content/themes/twentyfifteen/genericons/genericons.css?ver=3.2" type="text/css" media="all">
+<link rel="stylesheet" id="twentyfifteen-style-css" href="https://coltenj.com/wp-content/themes/twentyfifteen/style.css?ver=5.3.6" type="text/css" media="all">
+<link rel="stylesheet" id="twentyfifteen-block-style-css" href="https://coltenj.com/wp-content/themes/twentyfifteen/css/blocks.css?ver=20181230" type="text/css" media="all">
+<!--[if lt IE 9]>
+<link rel='stylesheet' id='twentyfifteen-ie-css'  href='https://coltenj.com/wp-content/themes/twentyfifteen/css/ie.css?ver=20141010' type='text/css' media='all' />
+<![endif]-->
+<!--[if lt IE 8]>
+<link rel='stylesheet' id='twentyfifteen-ie7-css'  href='https://coltenj.com/wp-content/themes/twentyfifteen/css/ie7.css?ver=20141010' type='text/css' media='all' />
+<![endif]-->
+<script type="text/javascript" src="https://coltenj.com/wp-includes/js/jquery/jquery.js?ver=1.12.4-wp"></script>
+<script type="text/javascript" src="https://coltenj.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.4.1"></script>
+<link rel="https://api.w.org/" href="https://coltenj.com/wp-json/">
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://coltenj.com/xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://coltenj.com/wp-includes/wlwmanifest.xml"> 
+<link rel="prev" title="animated mosaic experiments" href="https://coltenj.com/animated-mosaic-experiments/">
+<meta name="generator" content="WordPress 5.3.6">
+<link rel="canonical" href="https://coltenj.com/how-not-to-architect-a-social-network-on-its-way-to-the-proverbial-moon/">
+<link rel="shortlink" href="https://coltenj.com/?p=416">
+<link rel="alternate" type="application/json+oembed" href="https://coltenj.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fcoltenj.com%2Fhow-not-to-architect-a-social-network-on-its-way-to-the-proverbial-moon%2F">
+<link rel="alternate" type="text/xml+oembed" href="https://coltenj.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fcoltenj.com%2Fhow-not-to-architect-a-social-network-on-its-way-to-the-proverbial-moon%2F&amp;format=xml">
+		<style type="text/css" id="wp-custom-css">
+			.gist tr {
+	display: flex;
+}
+
+.gist .blob-num {
+	width: 2.5em !important;
+}
+
+.gist .blob-num::before {
+	position: relative;
+	right: 0.5em;
+}
+
+.gist .blob-wrapper {
+	max-height: 740px;
+	overflow: scroll !important;
+}		</style>
+		</head>
+
+<body class="post-template-default single single-post postid-416 single-format-standard wp-embed-responsive">
+<div id="page" class="hfeed site">
+	<a class="skip-link screen-reader-text" href="#content">Skip to content</a>
+
+	<div id="sidebar" class="sidebar" style="top: 0px;">
+		<header id="masthead" class="site-header" role="banner">
+			<div class="site-branding">
+										<p class="site-title"><a href="https://coltenj.com/" rel="home">coltenj.com</a></p>
+												<p class="site-description">Code tutorials, Net Art, complaints about bugs</p>
+										<button class="secondary-toggle">Menu and widgets</button>
+			</div><!-- .site-branding -->
+		</header><!-- .site-header -->
+
+			<div id="secondary" class="secondary">
+
+		
+		
+					<div id="widget-area" class="widget-area" role="complementary">
+				<aside id="search-2" class="widget widget_search"><form role="search" method="get" class="search-form" action="https://coltenj.com/">
+				<label>
+					<span class="screen-reader-text">Search for:</span>
+					<input type="search" class="search-field" placeholder="Search …" value="" name="s">
+				</label>
+				<input type="submit" class="search-submit screen-reader-text" value="Search">
+			</form></aside>		<aside id="recent-posts-2" class="widget widget_recent_entries">		<h2 class="widget-title">Recent Posts</h2>		<ul>
+											<li>
+					<a href="https://coltenj.com/how-not-to-architect-a-social-network-on-its-way-to-the-proverbial-moon/" aria-current="page">How not to architect a social network on its way to the proverbial moon</a>
+									</li>
+											<li>
+					<a href="https://coltenj.com/animated-mosaic-experiments/">animated mosaic experiments</a>
+									</li>
+											<li>
+					<a href="https://coltenj.com/creating-the-superhex-textile/">Creating the SuperHex textile</a>
+									</li>
+											<li>
+					<a href="https://coltenj.com/drawing-a-world-map-with-sacred-geometry/">Drawing a Globe with Compass and Straight Edge</a>
+									</li>
+											<li>
+					<a href="https://coltenj.com/big-numbers-in-12-bit-colorspace/">Using Color and Geometry to Represent Entropy and Other Big Numbers</a>
+									</li>
+					</ul>
+		</aside><aside id="archives-2" class="widget widget_archive"><h2 class="widget-title">Archives</h2>		<ul>
+				<li><a href="https://coltenj.com/2021/03/">March 2021</a>&nbsp;(1)</li>
+	<li><a href="https://coltenj.com/2020/08/">August 2020</a>&nbsp;(1)</li>
+	<li><a href="https://coltenj.com/2020/04/">April 2020</a>&nbsp;(2)</li>
+	<li><a href="https://coltenj.com/2020/03/">March 2020</a>&nbsp;(6)</li>
+	<li><a href="https://coltenj.com/2020/02/">February 2020</a>&nbsp;(1)</li>
+	<li><a href="https://coltenj.com/2017/05/">May 2017</a>&nbsp;(2)</li>
+	<li><a href="https://coltenj.com/2016/11/">November 2016</a>&nbsp;(1)</li>
+	<li><a href="https://coltenj.com/2016/04/">April 2016</a>&nbsp;(1)</li>
+	<li><a href="https://coltenj.com/2016/03/">March 2016</a>&nbsp;(2)</li>
+	<li><a href="https://coltenj.com/2016/02/">February 2016</a>&nbsp;(2)</li>
+	<li><a href="https://coltenj.com/2015/12/">December 2015</a>&nbsp;(2)</li>
+	<li><a href="https://coltenj.com/2015/11/">November 2015</a>&nbsp;(7)</li>
+	<li><a href="https://coltenj.com/2015/10/">October 2015</a>&nbsp;(18)</li>
+	<li><a href="https://coltenj.com/2015/09/">September 2015</a>&nbsp;(5)</li>
+		</ul>
+			</aside><aside id="categories-2" class="widget widget_categories"><h2 class="widget-title">Categories</h2>		<ul>
+				<li class="cat-item cat-item-82"><a href="https://coltenj.com/category/blender/">Blender</a> (1)
+</li>
+	<li class="cat-item cat-item-81"><a href="https://coltenj.com/category/python/">Python</a> (1)
+</li>
+	<li class="cat-item cat-item-1"><a href="https://coltenj.com/category/uncategorized/">Uncategorized</a> (50)
+</li>
+	<li class="cat-item cat-item-80"><a href="https://coltenj.com/category/vr/">VR</a> (1)
+</li>
+		</ul>
+			</aside><aside id="meta-2" class="widget widget_meta"><h2 class="widget-title">Meta</h2>			<ul>
+						<li><a href="https://coltenj.com/wp-login.php">Log in</a></li>
+			<li><a href="https://coltenj.com/feed/">Entries feed</a></li>
+			<li><a href="https://coltenj.com/comments/feed/">Comments feed</a></li>
+			<li><a href="https://wordpress.org/">WordPress.org</a></li>			</ul>
+			</aside>			</div><!-- .widget-area -->
+		
+	</div><!-- .secondary -->
+
+	</div><!-- .sidebar -->
+
+	<div id="content" class="site-content">
+
+	<div id="primary" class="content-area">
+		<main id="main" class="site-main" role="main">
+
+		
+<article id="post-416" class="post-416 post type-post status-publish format-standard hentry category-uncategorized">
+	
+	<header class="entry-header">
+		<h1 class="entry-title">How not to architect a social network on its way to the proverbial moon</h1>	</header><!-- .entry-header -->
+
+	<div class="entry-content">
+		
+<p>Whether BitClout is a nightmare, a scam, the future of social media, or all three is up for fierce debate on newsfeeds everywhere — but one place there’s little socializing happening is BitClout itself, because the first 24 hours of public availability has brought the site to its knees. Frustrated with the sluggishness, I <code>ctrl-shift-I</code>‘d into my browser’s developer tools and spied a couple of disastrous design choices that is hammering the centralized gateway with unnecessary data lookups.</p>
+
+
+
+<figure class="wp-block-image size-large"><img src="https://coltenj.com/wp-content/uploads/2021/03/image.png" alt="" class="wp-image-417" srcset="https://coltenj.com/wp-content/uploads/2021/03/image.png 1003w, https://coltenj.com/wp-content/uploads/2021/03/image-300x99.png 300w, https://coltenj.com/wp-content/uploads/2021/03/image-768x253.png 768w" sizes="(max-width: 1003px) 100vw, 1003px"><figcaption> </figcaption></figure>
+
+
+
+<p>Now, BitClout’s core functionality is essentially Twitter (and indeed their primary attraction is the 15,000 most popular twitter identities that they have copy-pasted and started selling shares of whether the account owner knows about it or not). You follow people, people follow you, you post, you comment on others’ posts. So to read any timeline, your browser must make a request to pull these posts and comments, plus some metadata and a link to the profile pic. So, peeking into my network traffic, I thought it was bad enough that the user’s profile pic was base64 encoded string 3kB in length — embedding binary data into a JSON response prevents any cache mechanism from taking it off your hands, not to mention that gzipping these bytes has little effect.</p>
+
+
+
+<figure class="wp-block-image size-large"><img src="https://coltenj.com/wp-content/uploads/2021/03/image-2.png" alt="" class="wp-image-420" srcset="https://coltenj.com/wp-content/uploads/2021/03/image-2.png 1002w, https://coltenj.com/wp-content/uploads/2021/03/image-2-300x107.png 300w, https://coltenj.com/wp-content/uploads/2021/03/image-2-768x273.png 768w" sizes="(max-width: 1002px) 100vw, 1002px"><figcaption>ProfilesFound[“0”][“ProfilePic”] was the first large data blob that caught my eye</figcaption></figure>
+
+
+
+<p>But that’s not the half of it even one percent of it. Expanding the “Posts” array of length 8 shows that the exact same 3kB base64 profile pic is a property of each comment, needlessly exploding the size of the response. What’s more, running <code>ctrl-f</code> to find all occurrences of <code>ProfilePic</code> returned 244 results – where are all these hiding? Ah, let’s peek in this 267 Length Array called <code>UsersThatHODL</code>: each of these elements also includes a <code>ProfileEntryResponse</code> object — these are the profile pics of every user who has bought a share of this identity. </p>
+
+
+
+<figure class="wp-block-gallery columns-2 is-cropped"><ul class="blocks-gallery-grid"><li class="blocks-gallery-item"><figure><img src="https://coltenj.com/wp-content/uploads/2021/03/image-3.png" alt="" data-id="427" data-full-url="https://coltenj.com/wp-content/uploads/2021/03/image-3.png" data-link="https://coltenj.com/?attachment_id=427" class="wp-image-427" srcset="https://coltenj.com/wp-content/uploads/2021/03/image-3.png 478w, https://coltenj.com/wp-content/uploads/2021/03/image-3-287x300.png 287w" sizes="(max-width: 478px) 100vw, 478px"><figcaption class="blocks-gallery-item__caption">Each post has an identical ProfileEntryResponse</figcaption></figure></li><li class="blocks-gallery-item"><figure><img src="https://coltenj.com/wp-content/uploads/2021/03/image-4.png" alt="" data-id="428" data-full-url="https://coltenj.com/wp-content/uploads/2021/03/image-4.png" data-link="https://coltenj.com/?attachment_id=428" class="wp-image-428" srcset="https://coltenj.com/wp-content/uploads/2021/03/image-4.png 373w, https://coltenj.com/wp-content/uploads/2021/03/image-4-277x300.png 277w" sizes="(max-width: 373px) 100vw, 373px"><figcaption class="blocks-gallery-item__caption">Every element of “UsersThatHODL” has a ProfileEntryResponse</figcaption></figure></li></ul></figure>
+
+
+
+<p>Hopefully this would be a quick fix, as user uploaded photos are already pushed to imgur and cached — so it was perhaps a simple oversight that profile photos got base64ified and stuck in a database. By performing a search and replace on the base64 strings and replacing the 3,000+ character binary data with 56 bit unique id (14 hex characters) to use as a URI, the zipped size of this payload that occurs on every timeline is minimized by over 90%. At this moment not everyone has 240+ “shareholders” for lack of a better term (cloutchasers?), but I expect they will quickly outgrow their current strategy.</p>
+
+
+
+<figure class="wp-block-table"><table class=""><tbody><tr><td>Response Text</td><td class="has-text-align-right" data-align="right">1,085 KB</td></tr><tr><td>Response Zipped</td><td class="has-text-align-right" data-align="right">534 KB</td></tr><tr><td>Response without ProfilePic</td><td class="has-text-align-right" data-align="right">228 KB</td></tr><tr><td>Response w/o ProfilePic Zipped</td><td class="has-text-align-right" data-align="right">39 KB</td></tr></tbody></table></figure>
+
+
+
+<p>I’ll clarify here that I don’t think serving 1MB of text every page load is the bottleneck — but the fact that 1MB of text must be serialized out of the database with each request. Depending on their choice of server (which, by the way, their tech stack is not yet disclosed, they don’t even say what kind of blockchain they use besides Proof of Work), only so many requests may be handled concurrently. In a worst-case-scenario, their server may have to finish up one connection before moving on to the next (as opposed to answering requests in parallel), as is the case with a basic Apache server, but I’m sure they have something more advanced than that, right? 🦗🦗🦗</p>
+
+
+
+<blockquote class="wp-block-quote"><p> UPDATE: apparently a ‘minor bug’ brought down the whole network in a recursive reboot of death, as you can see in the rather embarrassing error message below. Reverted transactions? Full refunds? What kind of blockchain are these folks running here?</p></blockquote>
+
+
+
+<figure class="wp-block-gallery columns-3 is-cropped"><ul class="blocks-gallery-grid"><li class="blocks-gallery-item"><figure><img src="https://coltenj.com/wp-content/uploads/2021/03/bitclout-createfollowtxnstateless.png" alt="" data-id="430" data-full-url="https://coltenj.com/wp-content/uploads/2021/03/bitclout-createfollowtxnstateless.png" data-link="https://coltenj.com/?attachment_id=430" class="wp-image-430" srcset="https://coltenj.com/wp-content/uploads/2021/03/bitclout-createfollowtxnstateless.png 521w, https://coltenj.com/wp-content/uploads/2021/03/bitclout-createfollowtxnstateless-300x291.png 300w" sizes="(max-width: 521px) 100vw, 521px"></figure></li><li class="blocks-gallery-item"><figure><img src="https://coltenj.com/wp-content/uploads/2021/03/error-loading-profiles.png" alt="" data-id="431" data-full-url="https://coltenj.com/wp-content/uploads/2021/03/error-loading-profiles.png" data-link="https://coltenj.com/?attachment_id=431" class="wp-image-431" srcset="https://coltenj.com/wp-content/uploads/2021/03/error-loading-profiles.png 522w, https://coltenj.com/wp-content/uploads/2021/03/error-loading-profiles-260x300.png 260w" sizes="(max-width: 522px) 100vw, 522px"></figure></li><li class="blocks-gallery-item"><figure><img src="https://coltenj.com/wp-content/uploads/2021/03/heavy-load.png" alt="" data-id="433" data-full-url="https://coltenj.com/wp-content/uploads/2021/03/heavy-load.png" data-link="https://coltenj.com/?attachment_id=433" class="wp-image-433" srcset="https://coltenj.com/wp-content/uploads/2021/03/heavy-load.png 518w, https://coltenj.com/wp-content/uploads/2021/03/heavy-load-300x207.png 300w" sizes="(max-width: 518px) 100vw, 518px"></figure></li><li class="blocks-gallery-item"><figure><img src="https://coltenj.com/wp-content/uploads/2021/03/Fully-Refunded.png" alt="" data-id="432" data-full-url="https://coltenj.com/wp-content/uploads/2021/03/Fully-Refunded.png" data-link="https://coltenj.com/?attachment_id=432" class="wp-image-432" srcset="https://coltenj.com/wp-content/uploads/2021/03/Fully-Refunded.png 675w, https://coltenj.com/wp-content/uploads/2021/03/Fully-Refunded-237x300.png 237w" sizes="(max-width: 675px) 100vw, 675px"><figcaption class="blocks-gallery-item__caption">Is it still considered a developer community if an app is developed in secret?</figcaption></figure></li></ul></figure>
+
+
+
+<p>As for how BitClout got to this point, from what I can tell, this utopia/dystopia of a reputation marketplace was secretly booted into existence in mid Jan (see the <a href="https://explorer.bitclout.com/?query-node=https:%2F%2Fapi.bitclout.com&amp;block-height=0">blockchain explorer</a> for the null hash), where coins have been pre-mined to distribute to the various Venture Capitalists whose involvement was only <a href="https://techcrunch.com/2021/03/22/crypto-social-network-bitclout-arrives-with-a-bevy-of-high-profile-investors-and-skeptics/">announced yesterday</a>. Over that time span, it seems that instead of an invite-only system like Facebook and Clubhouse had utilized, a simple password was passed around allowing friends of friends to register (my only source here is Clubhouse chatter). Whether yesterday’s public launch was scheduled is unclear — but the password was leaked to reddit a few days ago so perhaps the administrators decided the crypto-cat was out of the bag and opened the site for all. </p>
+
+
+
+<p>I’ll withhold my ethical and economic concerns until I have some more experience on the platform, but so far the community is welcoming, full of positivity and futurist (if accelerationist) optimism with a bias for boosting small creators: there’s not much to be gained in buying shares of Kanye West; maybe you double your money, maybe it cuts in half. If you’re here for gains, you want to identify the creators that are going to climb their way through exponential growth, from $1 to $10,000. In this way, the platform encourages money-flow from the rich (seeking an inflation-busting asset) to the masses of content-creators currently competing for ad-industry crumbs.</p>
+
+
+
+<p>One last point: the screenshots above are errors I received today browsing BitClout. I uploaded them to OpenSea.io intending to mint them as NFT, but the transaction fee to do so is currently 160 USD, not including fees paid by the buyer. Besides, I don’t feel great about burning a month’s worth of electricity to list these screenshots on a marketplace. I think BitClout is going to have a much lower barrier to entry for getting money in your pocket as an artist, as soon as they provide some means of withdrawing funds and trading tokens on the crypto-marketplaces at large — check out <a href="https://bitcloutwhitepaper.com/">their “one-pager” overview</a> for more info on what future the BitCloutians have in mind. </p>
+
+
+
+<p></p>
+	</div><!-- .entry-content -->
+
+	
+	<footer class="entry-footer">
+		<span class="posted-on"><span class="screen-reader-text">Posted on </span><a href="https://coltenj.com/how-not-to-architect-a-social-network-on-its-way-to-the-proverbial-moon/" rel="bookmark"><time class="entry-date published" datetime="2021-03-24T16:35:17-05:00">2021-03-24</time><time class="updated" datetime="2021-03-24T17:30:29-05:00">2021-03-24</time></a></span><span class="byline"><span class="author vcard"><span class="screen-reader-text">Author </span><a class="url fn n" href="https://coltenj.com/author/coltenjackson/">coltenjackson</a></span></span><span class="cat-links"><span class="screen-reader-text">Categories </span><a href="https://coltenj.com/category/uncategorized/" rel="category tag">Uncategorized</a></span>			</footer><!-- .entry-footer -->
+
+</article><!-- #post-416 -->
+
+<div id="comments" class="comments-area">
+
+	
+	
+		<div id="respond" class="comment-respond">
+		<h3 id="reply-title" class="comment-reply-title">Leave a Reply <small><a rel="nofollow" id="cancel-comment-reply-link" href="/how-not-to-architect-a-social-network-on-its-way-to-the-proverbial-moon/#respond" style="display:none;">Cancel reply</a></small></h3><form action="https://coltenj.com/wp-comments-post.php" method="post" id="commentform" class="comment-form" novalidate=""><p class="comment-notes"><span id="email-notes">Your email address will not be published.</span> Required fields are marked <span class="required">*</span></p><p class="comment-form-comment"><label for="comment">Comment</label> <textarea id="comment" name="comment" cols="45" rows="8" maxlength="65525" required="required"></textarea></p><p class="comment-form-author"><label for="author">Name <span class="required">*</span></label> <input id="author" name="author" type="text" value="" size="30" maxlength="245" required="required"></p>
+<p class="comment-form-email"><label for="email">Email <span class="required">*</span></label> <input id="email" name="email" type="email" value="" size="30" maxlength="100" aria-describedby="email-notes" required="required"></p>
+<p class="comment-form-url"><label for="url">Website</label> <input id="url" name="url" type="url" value="" size="30" maxlength="200"></p>
+<p class="form-submit"><input name="submit" type="submit" id="submit" class="submit" value="Post Comment"> <input type="hidden" name="comment_post_ID" value="416" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+</p><p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="b527318813"></p><p style="display: none;"></p><input type="hidden" id="ak_js" name="ak_js" value="1616625066831"></form>	</div><!-- #respond -->
+	<p class="akismet_comment_form_privacy_notice">This site uses Akismet to reduce spam. <a href="https://akismet.com/privacy/" target="_blank" rel="nofollow noopener">Learn how your comment data is processed</a>.</p>
+</div><!-- .comments-area -->
+
+	<nav class="navigation post-navigation" role="navigation" aria-label="Posts">
+		<h2 class="screen-reader-text">Post navigation</h2>
+		<div class="nav-links"><div class="nav-previous"><a href="https://coltenj.com/animated-mosaic-experiments/" rel="prev"><span class="meta-nav" aria-hidden="true">Previous</span> <span class="screen-reader-text">Previous post:</span> <span class="post-title">animated mosaic experiments</span></a></div></div>
+	</nav>
+		</main><!-- .site-main -->
+	</div><!-- .content-area -->
+
+
+	</div><!-- .site-content -->
+
+	<footer id="colophon" class="site-footer" role="contentinfo">
+		<div class="site-info">
+									<a href="https://wordpress.org/" class="imprint">
+				Proudly powered by WordPress			</a>
+		</div><!-- .site-info -->
+	</footer><!-- .site-footer -->
+
+</div><!-- .site -->
+
+<script type="text/javascript" async="async" src="https://coltenj.com/wp-content/plugins/koko-analytics/assets/dist/js/script.js?ver=1.0.15"></script>
+<script type="text/javascript" src="https://coltenj.com/wp-content/themes/twentyfifteen/js/skip-link-focus-fix.js?ver=20141010"></script>
+<script type="text/javascript" src="https://coltenj.com/wp-includes/js/comment-reply.min.js?ver=5.3.6"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var screenReaderText = {"expand":"<span class=\"screen-reader-text\">expand child menu<\/span>","collapse":"<span class=\"screen-reader-text\">collapse child menu<\/span>"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://coltenj.com/wp-content/themes/twentyfifteen/js/functions.js?ver=20150330"></script>
+<script type="text/javascript" src="https://coltenj.com/wp-includes/js/wp-embed.min.js?ver=5.3.6"></script>
+<script async="async" type="text/javascript" src="https://coltenj.com/wp-content/plugins/akismet/_inc/form.js?ver=4.1.6"></script>
+
+
+
+</body></html>
